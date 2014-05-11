@@ -1,0 +1,26 @@
+{
+  "name": "esmfamil",
+  "version": "0.0.0",
+  "description": "",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "coffee": "^0.0.1",
+    "grunt": "^0.4.4",
+    "grunt-coffeelint": "^0.0.10",
+    "grunt-contrib-coffee": "^0.10.1",
+    "grunt-contrib-watch": "^0.6.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mkhoeini/esmfamil"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/mkhoeini/esmfamil/issues"
+  },
+  "homepage": "https://github.com/mkhoeini/esmfamil"
+}
