@@ -10,7 +10,9 @@
     "grunt-contrib-coffee": "^0.10.1",
     "grunt-contrib-watch": "^0.6.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "grunt-contrib-jade": "^0.11.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "app.js",
-  "sourceRoot": "../coffeescript/",
+  "sourceRoot": "../../src/coffee/",
   "sources": [
     "app.coffee"
   ],

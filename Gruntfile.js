@@ -18,16 +18,16 @@
         },
         all: {
           expand: true,
-          cwd: 'src/coffeescript/',
+          cwd: 'src/coffee/',
           src: '**/*.coffee',
-          dest: 'public/js/compiled',
+          dest: 'www/js/',
           ext: '.js'
         },
         modified: {
           expand: true,
-          cwd: 'src/coffeescript/',
+          cwd: 'src/coffee/',
           src: '**/*.coffee',
-          dest: 'public/js/compiled',
+          dest: 'www/js/',
           ext: '.js',
           filter: isModified
         }
@@ -38,27 +38,52 @@
         },
         all: {
           expand: true,
-          cwd: 'src/coffeescript/',
+          cwd: 'src/coffee/',
           src: '**/*.coffee'
         },
         modified: {
           expand: true,
-          cwd: 'src/coffeescript/',
+          cwd: 'src/coffee/',
           src: '**/*.coffee',
+          filter: isModified
+        }
+      },
+      jade: {
+        options: {
+          pretty: true
+        },
+        all: {
+          expand: true,
+          cwd: 'src/template/',
+          src: '**/*.jade',
+          dest: 'www/',
+          ext: '.html'
+        },
+        modified: {
+          expand: true,
+          cwd: 'src/template/',
+          src: '**/*.jade',
+          dest: 'www/',
+          ext: '.html',
           filter: isModified
         }
       },
       watch: {
         coffeescript: {
-          files: ['src/**/*.coffee'],
+          files: ['src/coffee/**/*.coffee'],
           tasks: ['coffeelint:modified', 'coffee:modified']
+        },
+        jade: {
+          files: ['src/template/**/*.jade'],
+          tasks: ['jade:modified']
         }
       }
     });
     grunt.loadNpmTasks('grunt-coffeelint');
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    return grunt.registerTask('default', ['coffeelint:all', 'coffee:all', 'watch']);
+    grunt.loadNpmTasks('grunt-contrib-jade');
+    return grunt.registerTask('default', ['coffeelint:all', 'coffee:all', 'jade:all', 'watch']);
   };
 
 }).call(this);
