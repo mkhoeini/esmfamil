@@ -14,7 +14,7 @@ html(ng-app="esmfamil")
     title esmfamil App
   body
     div(ng-controller="loginCtrl")
-      a(href="" ng-hide="logged_in" ng-click="googleLogin()") Google Login!
+      a(href="" ng-hide="logged_in" ng-click="login('google')") Google Login!
       a(href="" ng-show="logged_in" ng-click="logout()") Logout
       ul
         li(ng-repeat='friend in friends')
