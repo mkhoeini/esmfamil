@@ -60,6 +60,21 @@ module.exports = (grunt) ->
         ext: '.html'
         filter: isModified
 
+    stylus:
+      all:
+        expand: true
+        cwd: 'src/style/'
+        src: '**/*.styl'
+        dest: 'www/css/'
+        ext: '.css'
+      modified:
+        expand: true
+        cwd: 'src/style/'
+        src: '**/*.styl'
+        dest: 'www/css/'
+        ext: '.css'
+        filter: isModified
+
     watch:
       coffeescript:
         files: ['src/coffee/**/*.coffee']
@@ -67,10 +82,19 @@ module.exports = (grunt) ->
       jade:
         files: ['src/template/**/*.jade']
         tasks: ['jade:modified']
+      stylus:
+        files: ['src/style/**/*.styl']
+        tasks: ['stylus:modified']
 
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-jade'
+  grunt.loadNpmTasks 'grunt-contrib-stylus'
 
-  grunt.registerTask 'default', ['coffeelint:all', 'coffee:all', 'jade:all', 'watch']
+  grunt.registerTask 'default', [
+    'coffeelint:all'
+    'coffee:all'
+    'jade:all'
+    'stylus:all'
+    'watch']
