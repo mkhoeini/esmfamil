@@ -1,4 +1,16 @@
-esmfamil = angular.module 'esmfamil', ['firebase', 'classy']
+esmfamil = angular.module 'esmfamil', ['firebase', 'classy', 'ui.router']
+
+esmfamil.config ($stateProvider, $urlRouterProvider) ->
+  $urlRouterProvider.otherwise '/login'
+
+  loadStates = (states...) ->
+    for state in states
+      $stateProvider.state state,
+        url: '/' + state
+        controller: state + 'Ctrl'
+        templateUrl: "/#{state}.html"
+
+  loadStates 'login', 'friends', 'game', 'results'
 
 esmfamil.classy.controller
 
@@ -21,6 +33,18 @@ esmfamil.classy.controller
       @$.friends = []
       @$.logged_in = false
     )
+
+
+esmfamil.classy.controller
+  name: 'friendsCtrl'
+
+
+esmfamil.classy.controller
+  name: 'gameCtrl'
+
+
+esmfamil.classy.controller
+  name: 'resultsCtrl'
 
 
 esmfamil.factory 'loginService', ($http, $q, $rootScope, $firebaseSimpleLogin) ->

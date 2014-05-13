@@ -1,8 +1,29 @@
 var GoogleService, LoginService, esmfamil,
+  __slice = [].slice,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-esmfamil = angular.module('esmfamil', ['firebase', 'classy']);
+esmfamil = angular.module('esmfamil', ['firebase', 'classy', 'ui.router']);
+
+esmfamil.config(function($stateProvider, $urlRouterProvider) {
+  var loadStates;
+  $urlRouterProvider.otherwise('/login');
+  loadStates = function() {
+    var state, states, _i, _len, _results;
+    states = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    _results = [];
+    for (_i = 0, _len = states.length; _i < _len; _i++) {
+      state = states[_i];
+      _results.push($stateProvider.state(state, {
+        url: '/' + state,
+        controller: state + 'Ctrl',
+        templateUrl: "/" + state + ".html"
+      }));
+    }
+    return _results;
+  };
+  return loadStates('login', 'friends', 'game', 'results');
+});
 
 esmfamil.classy.controller({
   name: 'loginCtrl',
@@ -29,6 +50,18 @@ esmfamil.classy.controller({
       };
     })(this));
   }
+});
+
+esmfamil.classy.controller({
+  name: 'friendsCtrl'
+});
+
+esmfamil.classy.controller({
+  name: 'gameCtrl'
+});
+
+esmfamil.classy.controller({
+  name: 'resultsCtrl'
 });
 
 esmfamil.factory('loginService', function($http, $q, $rootScope, $firebaseSimpleLogin) {
