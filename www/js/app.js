@@ -1,4 +1,4 @@
-var GoogleService, LoginService, esmfamil,
+var FacebookService, GoogleService, LoginService, esmfamil,
   __slice = [].slice,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -73,6 +73,8 @@ esmfamil.factory('loginService', function($http, $q, $rootScope, $firebaseSimple
     switch (provider) {
       case 'google':
         return service['google'] != null ? service['google'] : service['google'] = new GoogleService(auth, $rootScope, $http, $q);
+      case 'facebook':
+        return service['facebook'] != null ? service['facebook'] : service['facebook'] = new FacebookService(auth, $rootScope, $http, $q);
     }
   };
 });
@@ -152,6 +154,44 @@ GoogleService = (function(_super) {
   };
 
   return GoogleService;
+
+})(LoginService);
+
+FacebookService = (function(_super) {
+  __extends(FacebookService, _super);
+
+  function FacebookService() {
+    return FacebookService.__super__.constructor.apply(this, arguments);
+  }
+
+  FacebookService.prototype._base_url = 'https://graph.facebook.com/';
+
+  FacebookService.prototype._login = function() {
+    return this.auth.$login('facebook', {
+      scope: 'public_profile,email,user_friends'
+    });
+  };
+
+  FacebookService.prototype._friends = function() {
+    var deferred;
+    deferred = this.q.defer();
+    this.http.get(this._base_url + 'me/friends' + '?access_token=' + this.user.accessToken).success((function(_this) {
+      return function(data) {
+        var item, _i, _len, _ref;
+        _ref = data.data;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          item.displayName = item.name;
+          item.image = {};
+          item.image['url'] = _this._base_url + item.id + '/picture?type=square';
+        }
+        return deferred.resolve(data.data);
+      };
+    })(this));
+    return deferred.promise;
+  };
+
+  return FacebookService;
 
 })(LoginService);
 

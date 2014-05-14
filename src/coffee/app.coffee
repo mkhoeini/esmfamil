@@ -54,6 +54,7 @@ esmfamil.factory 'loginService', ($http, $q, $rootScope, $firebaseSimpleLogin) -
   (provider) ->
     switch provider
       when 'google' then service['google'] ?= new GoogleService auth, $rootScope, $http, $q
+      when 'facebook' then service['facebook'] ?= new FacebookService auth, $rootScope, $http, $q
 
 class LoginService
   constructor: (@auth, rootScope, @http, @q) ->
@@ -86,4 +87,23 @@ class GoogleService extends LoginService
       headers:
         Authorization: 'Bearer ' + @user.accessToken
     ).success (data) => deferred.resolve data.items
+    deferred.promise
+
+class FacebookService extends LoginService
+  _base_url: 'https://graph.facebook.com/'
+
+  _login: ->
+    @auth.$login 'facebook',
+      scope: 'public_profile,email,user_friends'
+
+  _friends: ->
+    deferred = @q.defer()
+    @http.get(@_base_url + 'me/friends' +
+      '?access_token=' + @user.accessToken
+    ).success (data) =>
+      for item in data.data
+        item.displayName = item.name
+        item.image = {}
+        item.image['url']= @_base_url + item.id + '/picture?type=square'
+      deferred.resolve data.data
     deferred.promise
