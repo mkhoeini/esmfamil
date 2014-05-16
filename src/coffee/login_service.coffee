@@ -1,4 +1,4 @@
-esmfamil.factory 'loginService', ($http, $q, $rootScope, $firebaseSimpleLogin) ->
+esmfamil.factory 'loginSvc', ($http, $q, $rootScope, $firebaseSimpleLogin) ->
   ref = new Firebase "https://fiery-fire-2012.firebaseio.com/"
   auth = $firebaseSimpleLogin ref
   service = {}
