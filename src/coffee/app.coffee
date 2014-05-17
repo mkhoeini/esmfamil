@@ -5,7 +5,7 @@ esmfamil.config ($stateProvider, $urlRouterProvider) ->
 
   loadStates = (states...) ->
     for state in states
-      path = state.replace /\./g, '/'
+      [..., path] = state.split('.')
 
       template = state.replace /\./g, '_'
       template = '/' + template + '.html'

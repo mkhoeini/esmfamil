@@ -7,12 +7,12 @@ esmfamil.config(function($stateProvider, $urlRouterProvider) {
   var loadStates;
   $urlRouterProvider.otherwise('/login');
   loadStates = function() {
-    var ctrl, path, state, states, template, _i, _len, _results;
+    var ctrl, path, state, states, template, _i, _len, _ref, _results;
     states = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
     _results = [];
     for (_i = 0, _len = states.length; _i < _len; _i++) {
       state = states[_i];
-      path = state.replace(/\./g, '/');
+      _ref = state.split('.'), path = _ref[_ref.length - 1];
       template = state.replace(/\./g, '_');
       template = '/' + template + '.html';
       ctrl = state.replace(/\.(.)/g, function(m, c) {
