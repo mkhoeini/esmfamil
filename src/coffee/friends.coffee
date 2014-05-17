@@ -35,8 +35,16 @@ esmfamil.classy.controller
   inject: ['$scope', 'myself', 'games', 'players']
 
   init: ->
-    @$.friends =
-      f for f in @players when not f.game? and f.id in @myself.friends
+    @$.players = @players
+
+  watch:
+    '{object}players': (val) ->
+      @$.friends = @_getOnlineFriends val
+      console.log @$.friends
+
+  _getOnlineFriends: (friends) ->
+    for id in friends.$getIndex() when not friends[id].game? and id in @myself.friends
+      friends[id]
 
   invite: (id) ->
     @people[id].game = @$.game

@@ -39,19 +39,25 @@ esmfamil.classy.controller({
   name: 'friendsInviteCtrl',
   inject: ['$scope', 'myself', 'games', 'players'],
   init: function() {
-    var f;
-    return this.$.friends = (function() {
-      var _i, _len, _ref, _ref1, _results;
-      _ref = this.players;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        f = _ref[_i];
-        if ((f.game == null) && (_ref1 = f.id, __indexOf.call(this.myself.friends, _ref1) >= 0)) {
-          _results.push(f);
-        }
+    return this.$.players = this.players;
+  },
+  watch: {
+    '{object}players': function(val) {
+      this.$.friends = this._getOnlineFriends(val);
+      return console.log(this.$.friends);
+    }
+  },
+  _getOnlineFriends: function(friends) {
+    var id, _i, _len, _ref, _results;
+    _ref = friends.$getIndex();
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      id = _ref[_i];
+      if ((friends[id].game == null) && __indexOf.call(this.myself.friends, id) >= 0) {
+        _results.push(friends[id]);
       }
-      return _results;
-    }).call(this);
+    }
+    return _results;
   },
   invite: function(id) {
     this.people[id].game = this.$.game;
