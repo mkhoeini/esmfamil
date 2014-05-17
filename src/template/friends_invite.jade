@@ -1,1 +1,3 @@
-p Got invited
+div(ng-repeat="friend in friends")
+  img(ng-src="{{friend.picture}}")
+  | {{friend.name}}

@@ -38,6 +38,7 @@ esmfamil.factory('loginSvc', function($http, $q, $rootScope, $firebaseSimpleLogi
     }
     svc.login().then(function(user) {
       players[user.id] = user;
+      players.$save();
       angular.copy(user, myself);
       return svc.getFriendList().then(function(friends) {
         return myself.friends = friends;

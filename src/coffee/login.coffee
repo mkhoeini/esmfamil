@@ -8,7 +8,6 @@ esmfamil.classy.controller
 
   watch:
     '{object}myself': (val) ->
-      console.log val
       @$state.go 'friends.newgame' if val?.name?
 
   login: (provider) ->

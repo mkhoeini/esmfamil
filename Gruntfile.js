@@ -94,7 +94,7 @@
         livereload: {
           options: {
             open: true,
-            base: 'www/'
+            base: ['www/', './']
           }
         }
       },

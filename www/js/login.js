@@ -6,7 +6,6 @@ esmfamil.classy.controller({
   },
   watch: {
     '{object}myself': function(val) {
-      console.log(val);
       if ((val != null ? val.name : void 0) != null) {
         return this.$state.go('friends.newgame');
       }

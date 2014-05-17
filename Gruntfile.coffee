@@ -83,7 +83,7 @@ module.exports = (grunt) ->
       livereload:
         options:
           open: true
-          base: 'www/'
+          base: ['www/', './']
 
     watch:
       options:
