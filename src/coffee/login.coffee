@@ -1,31 +1,16 @@
 esmfamil.classy.controller
   name: 'loginCtrl'
 
-  inject: ['$scope', 'loginSvc', 'people']
+  inject: ['$scope', 'loginSvc', 'myself', '$state']
 
   init: ->
-    somePeople =
-      'hasan@facebook':
-        name: 'hassan hassani'
-        image: '#'
-      'jafar@twitter':
-        name: 'jafar yaqubi'
-        image: '#'
-    for p in somePeople
-      @people[p] = somePeople[p]
-    @people.$save()
+    @$.myself = @myself
+
+  watch:
+    '{object}myself': (val) ->
+      console.log val
+      @$state.go 'friends.newgame' if val?.name?
 
   login: (provider) ->
-    login = @loginSvc(provider)
-    login.login().then =>
-      @$.logged_in = true
-      login.friends().then (friends) =>
-        @$.friends = friends
-
-  logout: ->
-    @auth.$logout()
-    @$rootScope.$on("$firebaseSimpleLogin:logout", (e, user) =>
-      @$.friends = []
-      @$.logged_in = false
-    )
+    @loginSvc(provider)
 

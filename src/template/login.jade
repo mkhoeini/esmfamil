@@ -1,8 +1,4 @@
 div
-  a(href="" ng-hide="logged_in" ng-click="login('google')") Google Login!
-  a(href="" ng-hide="logged_in" ng-click="login('facebook')") Facebook Login!
-  a(href="" ng-show="logged_in" ng-click="logout()") Logout
-  ul
-    li(ng-repeat='friend in friends')
-      span {{friend.displayName}}
-      img(ng-src="{{friend.image.url}}")
+  a(href="" ng-click="login('google')") Google Login!
+div
+  a(href="" ng-click="login('facebook')") Facebook Login!

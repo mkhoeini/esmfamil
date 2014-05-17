@@ -2,22 +2,35 @@
 esmfamil.classy.controller
   name: 'friendsCtrl'
 
-  inject: ['people', 'games', 'self']
+esmfamil.classy.controller
+  name: 'friendsNewgameCtrl'
+
+  inject: ['$scope', 'myself', 'games']
 
   init: ->
-    @$.people = @people
-
-  invite: (id) ->
-    @people[id].game = @$.game
-    @people.$save id
+    @$.a = true
 
   newGame: ->
-    @games.$add(self)
+    @games.$add(@self)
       .then (ref) =>
-        @$.game = ref.name()
+        @self.game = ref.name()
+
+esmfamil.classy.controller
+  name: 'friendsInvitedCtrl'
+
+  inject: ['$scope', 'myself', 'games']
 
   acceptInvite: ->
     game = @people[self].game
     @games[game][self].score = 0
     @games.$save game
+
+esmfamil.classy.controller
+  name: 'friendsInviteCtrl'
+
+  inject: ['$scope', 'myself', 'games']
+
+  invite: (id) ->
+    @people[id].game = @$.game
+    @people.$save id
 

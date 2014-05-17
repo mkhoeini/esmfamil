@@ -5,9 +5,23 @@ esmfamil.config ($stateProvider, $urlRouterProvider) ->
 
   loadStates = (states...) ->
     for state in states
-      $stateProvider.state state,
-        url: '/' + state
-        controller: state + 'Ctrl'
-        templateUrl: "/#{state}.html"
+      path = state.replace /\./g, '/'
 
-  loadStates 'login', 'friends', 'game', 'results'
+      template = state.replace /\./g, '_'
+      template = '/' + template + '.html'
+
+      ctrl = state.replace /\.(.)/g, (m, c) -> c.toUpperCase()
+      ctrl += 'Ctrl'
+
+      $stateProvider.state state,
+        url: '/' + path
+        controller: ctrl
+        templateUrl: template
+
+  loadStates 'login',
+             'friends',
+             'friends.newgame',
+             'friends.invited',
+             'friends.invite',
+             'game',
+             'results'
