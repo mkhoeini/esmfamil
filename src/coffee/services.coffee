@@ -12,7 +12,7 @@ esmfamil.factory 'games', ($firebase) ->
 esmfamil.factory 'myself', ->
   {}
 
-esmfamil.factory 'loginSvc', ($http, $q, $rootScope, $firebaseSimpleLogin, myself, players) ->
+esmfamil.factory 'loginSvc', ($http, $q, $rootScope, $firebaseSimpleLogin, myself, players, games) ->
   auth = $firebaseSimpleLogin firebaseRef
   svc = null
   (provider) ->
@@ -24,6 +24,8 @@ esmfamil.factory 'loginSvc', ($http, $q, $rootScope, $firebaseSimpleLogin, mysel
     svc.login().then (user) ->
       players[user.id] = user
       players.$save()
+      games.$getIndex().forEach (index) ->
+        games.$child(index).$remove user.id
       angular.copy user, myself
       svc.getFriendList().then (friends) ->
         myself.friends = friends

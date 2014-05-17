@@ -20,7 +20,7 @@ esmfamil.factory('myself', function() {
   return {};
 });
 
-esmfamil.factory('loginSvc', function($http, $q, $rootScope, $firebaseSimpleLogin, myself, players) {
+esmfamil.factory('loginSvc', function($http, $q, $rootScope, $firebaseSimpleLogin, myself, players, games) {
   var auth, svc;
   auth = $firebaseSimpleLogin(firebaseRef);
   svc = null;
@@ -39,6 +39,9 @@ esmfamil.factory('loginSvc', function($http, $q, $rootScope, $firebaseSimpleLogi
     svc.login().then(function(user) {
       players[user.id] = user;
       players.$save();
+      games.$getIndex().forEach(function(index) {
+        return games.$child(index).$remove(user.id);
+      });
       angular.copy(user, myself);
       return svc.getFriendList().then(function(friends) {
         return myself.friends = friends;

@@ -7,11 +7,26 @@ esmfamil.classy.controller({
 esmfamil.classy.controller({
   name: 'friendsNewgameCtrl',
   inject: ['$scope', '$state', 'myself', 'games', 'players'],
-  init: function() {},
+  init: function() {
+    return this.players.$child(this.myself.id).$child('game').$on('value', function(val) {
+      var game, _ref;
+      game = val != null ? (_ref = val.snapshot) != null ? _ref.value : void 0 : void 0;
+      if (!angular.isString(game)) {
+        return;
+      }
+      if (game === this.myself.game) {
+        return;
+      }
+      this.myself.game = game;
+      return this.$state.go('friends.invited');
+    });
+  },
   newGame: function() {
     var man;
     man = {};
-    man[this.myself.id] = this.myself;
+    man[this.myself.id] = {
+      score: 0
+    };
     return this.games.$add(man).then((function(_this) {
       return function(ref) {
         _this.myself.game = ref.name();
@@ -43,8 +58,7 @@ esmfamil.classy.controller({
   },
   watch: {
     '{object}players': function(val) {
-      this.$.friends = this._getOnlineFriends(val);
-      return console.log(this.$.friends);
+      return this.$.friends = this._getOnlineFriends(val);
     }
   },
   _getOnlineFriends: function(friends) {
@@ -60,8 +74,9 @@ esmfamil.classy.controller({
     return _results;
   },
   invite: function(id) {
-    this.people[id].game = this.$.game;
-    return this.people.$save(id);
+    return this.players.$child(id).$update({
+      game: this.myself.game
+    });
   }
 });
 

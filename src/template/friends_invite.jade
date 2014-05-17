@@ -1,3 +1,4 @@
 div(ng-repeat="friend in friends")
-  img(ng-src="{{friend.picture}}")
-  | {{friend.name}}
+  a(href="" ng-click="invite(friend.id)")
+    img(ng-src="{{friend.picture}}")
+    | {{friend.name}}

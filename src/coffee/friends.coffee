@@ -8,10 +8,16 @@ esmfamil.classy.controller
   inject: ['$scope', '$state', 'myself', 'games', 'players']
 
   init: ->
+    @players.$child(@myself.id).$child('game').$on 'value', (val)->
+      game = val?.snapshot?.value
+      return unless angular.isString game
+      return if game == @myself.game
+      @myself.game = game
+      @$state.go 'friends.invited'
 
   newGame: ->
     man = {}
-    man[@myself.id] = @myself
+    man[@myself.id] = {score: 0}
     @games.$add(man)
       .then (ref) =>
         @myself.game = ref.name()
@@ -40,13 +46,11 @@ esmfamil.classy.controller
   watch:
     '{object}players': (val) ->
       @$.friends = @_getOnlineFriends val
-      console.log @$.friends
 
   _getOnlineFriends: (friends) ->
     for id in friends.$getIndex() when not friends[id].game? and id in @myself.friends
       friends[id]
 
   invite: (id) ->
-    @people[id].game = @$.game
-    @people.$save id
-
+    @players.$child(id).$update
+      game: @myself.game
