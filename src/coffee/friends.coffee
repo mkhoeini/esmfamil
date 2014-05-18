@@ -47,8 +47,8 @@ esmfamil.classy.controller
 
 esmfamil.filter 'onlineFriends', (myself) ->
   (players) ->
-    for id in players.$getIndex() when not players[id].game? and id in myself.friends
-      players[id]
+    for id, player of players when not player.game? and id in myself.friends
+      player
 
 esmfamil.filter 'participants', (myself, games) ->
   game = games.$child myself.game

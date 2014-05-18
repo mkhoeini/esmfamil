@@ -12,24 +12,25 @@ esmfamil.factory 'games', ($firebase) ->
 esmfamil.factory 'myself', ->
   {}
 
-esmfamil.factory 'loginSvc', ($http, $q, $rootScope, $firebaseSimpleLogin, myself, players, games) ->
-  auth = $firebaseSimpleLogin firebaseRef
-  svc = null
-  (provider) ->
-    switch provider
-      when 'google'
-        svc ?= new GoogleService auth, $rootScope, $http, $q
-      when 'facebook'
-        svc ?= new FacebookService auth, $rootScope, $http, $q
-    svc.login().then (user) ->
-      players.$child(user.id).$set user
-      games.$on 'loaded', ->
-        for index in games.$getIndex()
-          games.$child(index).$remove user.id
-      angular.copy user, myself
-      svc.getFriendList().then (friends) ->
-        myself.friends = friends
-    svc
+esmfamil.factory 'loginSvc',
+  ($http, $q, $rootScope, $firebaseSimpleLogin, myself, players, games) ->
+    auth = $firebaseSimpleLogin firebaseRef
+    svc = null
+    (provider) ->
+      switch provider
+        when 'google'
+          svc ?= new GoogleService auth, $rootScope, $http, $q
+        when 'facebook'
+          svc ?= new FacebookService auth, $rootScope, $http, $q
+      svc.login().then (user) ->
+        players.$child(user.id).$set user
+        games.$on 'loaded', ->
+          for index in games.$getIndex()
+            games.$child(index).$remove user.id
+        angular.copy user, myself
+        svc.getFriendList().then (friends) ->
+          myself.friends = friends
+      svc
 
 class LoginService
   constructor: (@auth, rootScope, @http, @q) ->

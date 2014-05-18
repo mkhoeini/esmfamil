@@ -66,13 +66,12 @@ esmfamil.classy.controller({
 
 esmfamil.filter('onlineFriends', function(myself) {
   return function(players) {
-    var id, _i, _len, _ref, _results;
-    _ref = players.$getIndex();
+    var id, player, _results;
     _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      id = _ref[_i];
-      if ((players[id].game == null) && __indexOf.call(myself.friends, id) >= 0) {
-        _results.push(players[id]);
+    for (id in players) {
+      player = players[id];
+      if ((player.game == null) && __indexOf.call(myself.friends, id) >= 0) {
+        _results.push(player);
       }
     }
     return _results;
