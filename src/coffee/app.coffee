@@ -21,7 +21,6 @@ esmfamil.config ($stateProvider, $urlRouterProvider) ->
   loadStates 'login',
              'friends',
              'friends.newgame',
-             'friends.invited',
              'friends.invite',
              'game',
              'results'

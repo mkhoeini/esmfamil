@@ -16,6 +16,18 @@ esmfamil.factory('games', function($firebase) {
   return $firebase(gamesRef);
 });
 
+esmfamil.factory('setOnPlayers', function(games, myself) {
+  return function(options) {
+    return games.$child(myself.game).$transaction(function(game) {
+      var id;
+      for (id in game) {
+        angular.extend(game[id], options);
+      }
+      return game;
+    });
+  };
+});
+
 esmfamil.factory('myself', function() {
   return {};
 });

@@ -1,2 +1,14 @@
 
-<p>Wait for your friends to start the game</p>
+<p ng-hide="started">Wait for your friends to start the game</p>
+<div ng-show="started">
+  <p>Current letter: {{letter}}</p>
+  <p>Remaining time: {{time}}</p>
+  <table>
+    <tr ng-repeat="(name,field) in fields">
+      <td>{{name}}</td>
+      <td>
+        <input ng-model="field.value"/>
+      </td>
+    </tr>
+  </table><a href="" ng-click="stop()">Done</a>
+</div>

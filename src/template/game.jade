@@ -1,1 +1,11 @@
-p Wait for your friends to start the game
+p(ng-hide="started") Wait for your friends to start the game
+
+div(ng-show="started")
+  p Current letter: {{letter}}
+  p Remaining time: {{time}}
+  table
+    tr(ng-repeat="(name,field) in fields")
+      td {{name}}
+      td
+        input(ng-model="field.value")
+  a(href="" ng-click="stop()") Done
