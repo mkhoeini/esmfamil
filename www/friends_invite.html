@@ -1,2 +1,3 @@
 
-<div ng-repeat="friend in friends"><a href="" ng-click="invite(friend.id)"><img ng-src="{{friend.picture}}"/>{{friend.name}}</a></div>
+<div ng-repeat="friend in players|onlineFriends"><a href="" ng-click="invite(friend.id)"><img ng-src="{{friend.picture}}"/>{{friend.name}}</a></div>
+<div ng-repeat="participant in players|participants"><img ng-src="{{participant.picture}}"/>{{participant.name}}</div><a ui-sref="game">Start</a>

@@ -37,8 +37,7 @@ esmfamil.factory('loginSvc', function($http, $q, $rootScope, $firebaseSimpleLogi
         }
     }
     svc.login().then(function(user) {
-      players[user.id] = user;
-      players.$save();
+      players.$child(user.id).$set(user);
       games.$getIndex().forEach(function(index) {
         return games.$child(index).$remove(user.id);
       });

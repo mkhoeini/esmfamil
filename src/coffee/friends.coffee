@@ -8,7 +8,7 @@ esmfamil.classy.controller
   inject: ['$scope', '$state', 'myself', 'games', 'players']
 
   init: ->
-    @players.$child(@myself.id).$child('game').$on 'value', (val)->
+    @players.$child(@myself.id).$child('game').$on 'value', (val) =>
       game = val?.snapshot?.value
       return unless angular.isString game
       return if game == @myself.game
@@ -31,9 +31,7 @@ esmfamil.classy.controller
   inject: ['$scope', 'myself', 'games']
 
   acceptInvite: ->
-    game = @people[self].game
-    @games[game][self].score = 0
-    @games.$save game
+
 
 esmfamil.classy.controller
   name: 'friendsInviteCtrl'
@@ -43,14 +41,17 @@ esmfamil.classy.controller
   init: ->
     @$.players = @players
 
-  watch:
-    '{object}players': (val) ->
-      @$.friends = @_getOnlineFriends val
-
-  _getOnlineFriends: (friends) ->
-    for id in friends.$getIndex() when not friends[id].game? and id in @myself.friends
-      friends[id]
-
   invite: (id) ->
     @players.$child(id).$update
       game: @myself.game
+
+esmfamil.filter 'onlineFriends', (myself) ->
+  (players) ->
+    for id in players.$getIndex() when not players[id].game? and id in myself.friends
+      players[id]
+
+esmfamil.filter 'participants', (myself, games) ->
+  game = games.$child myself.game
+  (players) ->
+    for id, player in players.$getIndex() when id in game.$getIndex()
+      player

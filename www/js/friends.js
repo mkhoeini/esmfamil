@@ -8,18 +8,20 @@ esmfamil.classy.controller({
   name: 'friendsNewgameCtrl',
   inject: ['$scope', '$state', 'myself', 'games', 'players'],
   init: function() {
-    return this.players.$child(this.myself.id).$child('game').$on('value', function(val) {
-      var game, _ref;
-      game = val != null ? (_ref = val.snapshot) != null ? _ref.value : void 0 : void 0;
-      if (!angular.isString(game)) {
-        return;
-      }
-      if (game === this.myself.game) {
-        return;
-      }
-      this.myself.game = game;
-      return this.$state.go('friends.invited');
-    });
+    return this.players.$child(this.myself.id).$child('game').$on('value', (function(_this) {
+      return function(val) {
+        var game, _ref;
+        game = val != null ? (_ref = val.snapshot) != null ? _ref.value : void 0 : void 0;
+        if (!angular.isString(game)) {
+          return;
+        }
+        if (game === _this.myself.game) {
+          return;
+        }
+        _this.myself.game = game;
+        return _this.$state.go('friends.invited');
+      };
+    })(this));
   },
   newGame: function() {
     var man;
@@ -42,12 +44,7 @@ esmfamil.classy.controller({
 esmfamil.classy.controller({
   name: 'friendsInvitedCtrl',
   inject: ['$scope', 'myself', 'games'],
-  acceptInvite: function() {
-    var game;
-    game = this.people[self].game;
-    this.games[game][self].score = 0;
-    return this.games.$save(game);
-  }
+  acceptInvite: function() {}
 });
 
 esmfamil.classy.controller({
@@ -56,28 +53,43 @@ esmfamil.classy.controller({
   init: function() {
     return this.$.players = this.players;
   },
-  watch: {
-    '{object}players': function(val) {
-      return this.$.friends = this._getOnlineFriends(val);
-    }
-  },
-  _getOnlineFriends: function(friends) {
-    var id, _i, _len, _ref, _results;
-    _ref = friends.$getIndex();
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      id = _ref[_i];
-      if ((friends[id].game == null) && __indexOf.call(this.myself.friends, id) >= 0) {
-        _results.push(friends[id]);
-      }
-    }
-    return _results;
-  },
   invite: function(id) {
     return this.players.$child(id).$update({
       game: this.myself.game
     });
   }
+});
+
+esmfamil.filter('onlineFriends', function(myself) {
+  return function(players) {
+    var id, _i, _len, _ref, _results;
+    _ref = players.$getIndex();
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      id = _ref[_i];
+      if ((players[id].game == null) && __indexOf.call(myself.friends, id) >= 0) {
+        _results.push(players[id]);
+      }
+    }
+    return _results;
+  };
+});
+
+esmfamil.filter('participants', function(myself, games) {
+  var game;
+  game = games.$child(myself.game);
+  return function(players) {
+    var id, player, _i, _len, _ref, _results;
+    _ref = players.$getIndex();
+    _results = [];
+    for (player = _i = 0, _len = _ref.length; _i < _len; player = ++_i) {
+      id = _ref[player];
+      if (__indexOf.call(game.$getIndex(), id) >= 0) {
+        _results.push(player);
+      }
+    }
+    return _results;
+  };
 });
 
 //# sourceMappingURL=friends.js.map
