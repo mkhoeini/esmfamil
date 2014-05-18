@@ -27,7 +27,7 @@ esmfamil.classy.controller({
     var man;
     man = {};
     man[this.myself.id] = {
-      score: 0
+      started: false
     };
     return this.games.$add(man).then((function(_this) {
       return function(ref) {
@@ -44,7 +44,11 @@ esmfamil.classy.controller({
 esmfamil.classy.controller({
   name: 'friendsInvitedCtrl',
   inject: ['$scope', 'myself', 'games'],
-  acceptInvite: function() {}
+  accept: function() {
+    return this.games.$child(this.myself.game).$child(this.myself.id).$set({
+      started: false
+    });
+  }
 });
 
 esmfamil.classy.controller({

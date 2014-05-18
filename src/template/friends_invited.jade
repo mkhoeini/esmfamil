@@ -1,1 +1,7 @@
-p Got invited
+h1 You've got invited!
+
+div(ng-repeat="participant in players|participants")
+  img(ng-src="{{participant.picture}}")
+  | {{participant.name}}
+
+a(ui-sref="game" ng-click="accept()") Accept!

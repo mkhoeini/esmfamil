@@ -23,8 +23,9 @@ esmfamil.factory 'loginSvc', ($http, $q, $rootScope, $firebaseSimpleLogin, mysel
         svc ?= new FacebookService auth, $rootScope, $http, $q
     svc.login().then (user) ->
       players.$child(user.id).$set user
-      games.$getIndex().forEach (index) ->
-        games.$child(index).$remove user.id
+      games.$on 'loaded', ->
+        for index in games.$getIndex()
+          games.$child(index).$remove user.id
       angular.copy user, myself
       svc.getFriendList().then (friends) ->
         myself.friends = friends

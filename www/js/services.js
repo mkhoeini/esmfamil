@@ -38,8 +38,15 @@ esmfamil.factory('loginSvc', function($http, $q, $rootScope, $firebaseSimpleLogi
     }
     svc.login().then(function(user) {
       players.$child(user.id).$set(user);
-      games.$getIndex().forEach(function(index) {
-        return games.$child(index).$remove(user.id);
+      games.$on('loaded', function() {
+        var index, _i, _len, _ref, _results;
+        _ref = games.$getIndex();
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          index = _ref[_i];
+          _results.push(games.$child(index).$remove(user.id));
+        }
+        return _results;
       });
       angular.copy(user, myself);
       return svc.getFriendList().then(function(friends) {

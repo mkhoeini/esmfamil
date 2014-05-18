@@ -1,2 +1,3 @@
 
-<p>Got invited</p>
+<h1>You've got invited!</h1>
+<div ng-repeat="participant in players|participants"><img ng-src="{{participant.picture}}"/>{{participant.name}}</div><a ui-sref="game" ng-click="accept()">Accept!</a>

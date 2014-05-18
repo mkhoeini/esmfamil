@@ -17,7 +17,7 @@ esmfamil.classy.controller
 
   newGame: ->
     man = {}
-    man[@myself.id] = {score: 0}
+    man[@myself.id] = {started: false}
     @games.$add(man)
       .then (ref) =>
         @myself.game = ref.name()
@@ -30,8 +30,8 @@ esmfamil.classy.controller
 
   inject: ['$scope', 'myself', 'games']
 
-  acceptInvite: ->
-
+  accept: ->
+    @games.$child(@myself.game).$child(@myself.id).$set started: false
 
 esmfamil.classy.controller
   name: 'friendsInviteCtrl'
