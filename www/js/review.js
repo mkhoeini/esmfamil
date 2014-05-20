@@ -7,10 +7,16 @@ esmfamil.classy.controller({
     this.$.players = this.players;
     this.$.game = this.games.$child(this.myself.game);
     this.$.data = this.$.game.$child(this.myself.id);
-    this.$.data.$child('review').$bind(this.$, 'review');
+    this.$.review = this.$.data.$child('review');
     if (this.myself.admin) {
       return this._startReview();
     }
+  },
+  _accept: function(pid, v) {
+    if (v == null) {
+      v = true;
+    }
+    return this.$.review.$child('fields').$child(pid).$child('acceptable').$set(v);
   },
   watch: {
     'review.title': function(v) {
@@ -19,9 +25,14 @@ esmfamil.classy.controller({
         return;
       }
       for (pid in this.$.review.fields) {
-        this.$.review.fields[pid].acceptable = true;
+        this._accept(pid);
       }
       return delete this.$.review.fields[this.myself.id];
+    },
+    'review.finished': function(v) {
+      if (v) {
+        return this.$state.go('results');
+      }
     }
   },
   _startReview: function() {
@@ -38,7 +49,6 @@ esmfamil.classy.controller({
   _review: function() {
     var field, fields, input, participant, requiredTime, review, _i, _len, _ref, _ref1, _ref2;
     field = arguments[0], fields = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-    console.log(arguments);
     if (((_ref = this.$.review) != null ? _ref.title : void 0) != null) {
       this._calcScores();
     }
@@ -56,7 +66,7 @@ esmfamil.classy.controller({
       review.time += 1.5;
     }
     review.time = Math.floor(review.time);
-    this.$.review = review;
+    this.$.review.$set(review);
     this.setOnPlayers({
       review: review
     });
@@ -80,7 +90,11 @@ esmfamil.classy.controller({
     return this.$timeout(this._tick.bind(this), 1000);
   },
   _reviewFinished: function() {
-    return this.$state.go('results');
+    return this.setOnPlayers({
+      review: {
+        finished: true
+      }
+    });
   },
   _calcScores: function() {
     var field, person, pid, r, result, results, review, reviewd_person, score, unique, values, _i, _len, _ref, _ref1, _results;

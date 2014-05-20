@@ -18,11 +18,13 @@ esmfamil.factory('games', function($firebase) {
 
 esmfamil.factory('setOnPlayers', function(games, myself) {
   return function(options) {
+    console.log(options);
     return games.$child(myself.game).$transaction(function(game) {
       var id;
       for (id in game) {
-        angular.extend(game[id], options);
+        $.extend(true, game[id], options);
       }
+      console.log(game);
       return game;
     });
   };

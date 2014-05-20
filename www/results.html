@@ -10,3 +10,6 @@
     <td ng-repeat="roundNum in rounds">{{playerData.score[roundNum] || ''}}</td>
   </tr>
 </table>
+<div ng-show="admin">
+  <button type="button" ng-click="replay()">Do you want to play again?</button>
+</div>

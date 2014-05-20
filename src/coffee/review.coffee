@@ -8,22 +8,28 @@ esmfamil.classy.controller
     @$.players = @players
     @$.game = @games.$child @myself.game
     @$.data = @$.game.$child @myself.id
-    @$.data.$child('review').$bind @$, 'review'
+    @$.review = @$.data.$child('review')
 
     @_startReview() if @myself.admin
+
+  _accept: (pid, v = true) ->
+    @$.review.$child('fields').$child(pid).$child('acceptable')
+      .$set v
 
   watch:
     'review.title': (v) ->
       return unless v? and @$.review.fields?
       for pid of @$.review.fields
-        @$.review.fields[pid].acceptable = true
+        @_accept pid
       delete @$.review.fields[@myself.id]
+
+    'review.finished': (v) ->
+      @$state.go 'results' if v
 
   _startReview: ->
     @_review (f for f of @$.data.fields)...
 
   _review: (field, fields...) ->
-    console.log arguments
     @_calcScores() if @$.review?.title?
 
     review = {}
@@ -38,7 +44,7 @@ esmfamil.classy.controller
 
     review.time = Math.floor review.time
 
-    @$.review = review
+    @$.review.$set review
     @setOnPlayers review: review
 
     @_tick()
@@ -58,7 +64,9 @@ esmfamil.classy.controller
     @$timeout @_tick.bind(@), 1000
 
   _reviewFinished: ->
-    @$state.go 'results'
+    @setOnPlayers
+      review:
+        finished: true
 
   _calcScores: ->
     results = {}

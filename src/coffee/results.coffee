@@ -2,10 +2,24 @@
 esmfamil.classy.controller
   name: 'resultsCtrl'
 
-  inject: ['$scope', 'myself', 'games', 'players']
+  inject: ['$scope', '$state', 'myself', 'setOnPlayers', 'games', 'players']
 
   init: ->
-    @$.game = @games[@myself.game]
+    @$.game = @games.$child @myself.game
+    @$.data = @$.game.$child @myself.id
     @$.players = @players
-    @$.rounds = [1..@$.game[@myself.id].round]
+    @$.rounds = [1..@$.data.round]
+    @$.admin = @myself.admin
+
+  replay: ->
+    @myself.round += 1
+    @setOnPlayers
+      done: false
+      started: true
+      fields: {}
+      round: @myself.round
+
+  watch:
+    'data.started': (v) ->
+      @$state.go 'game' if v
 

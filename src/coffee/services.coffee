@@ -11,9 +11,11 @@ esmfamil.factory 'games', ($firebase) ->
 
 esmfamil.factory 'setOnPlayers', (games, myself) ->
   (options) ->
+    console.log options
     games.$child(myself.game).$transaction (game) ->
       for id of game
-        angular.extend game[id], options
+        $.extend true, game[id], options
+      console.log game
       game
 
 esmfamil.factory 'myself', ->
