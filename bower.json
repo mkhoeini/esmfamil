@@ -22,6 +22,7 @@
     "angularfire": "~0.7.1",
     "firebase-simple-login": "~1.4.1",
     "angular-classy": "~0.4.2",
-    "angular-ui-router": "~0.2.10"
+    "angular-ui-router": "~0.2.10",
+    "jquery": "~2.1.1"
   }
 }
