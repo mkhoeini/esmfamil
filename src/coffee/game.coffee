@@ -11,12 +11,14 @@ esmfamil.classy.controller
   name: 'gameCtrl'
 
   inject: [
-    '$scope', '$timeout', 'myself',
+    '$scope', '$timeout', 'myself', '$state',
     'games', 'players', 'setOnPlayers'
   ]
 
   init: ->
-    @$.data = @games.$child(@myself.game).$child @myself.id
+    @$.players = @players
+    @$.game = @games.$child @myself.game
+    @$.data = @$.game.$child @myself.id
     @$.data.$child('time').$bind @$, 'time'
     @$.data.$child('letter').$bind @$, 'letter'
     @$.data.$child('started').$bind @$, 'started'
@@ -34,6 +36,10 @@ esmfamil.classy.controller
 
   watch:
     'data.done': (v) -> @stop() if v
+    '{object}fields': (v) ->
+      @$.allFilled = true
+      for name, field of v
+        @$.allFilled = false if field.value.trim() == ''
 
   start: ->
     random_letter = persian_letters[Math.floor(Math.random()*32)]
@@ -41,10 +47,11 @@ esmfamil.classy.controller
 
     @setOnPlayers
       started: yes
+      done: no
       letter: random_letter
       round: @myself.round
 
-    @myself.time = 5
+    @myself.time = 180
     @myself.started = true
     @_tick()
 
@@ -52,11 +59,22 @@ esmfamil.classy.controller
     return unless @myself.started
     @myself.time -= 1
     if @myself.time <= 0
-      @setOnPlayers done: true
+      @done()
     @setOnPlayers time: @myself.time
     @$timeout @_tick.bind(@), 1000
+
+  done: ->
+    @setOnPlayers done: true
 
   stop: ->
     @myself.started = false
     @$.started = false
+    @$.data.$child('fields').$set @$.fields
+    @$state.go 'review'
+
+
+esmfamil.filter 'currentlyPlaying', ->
+  (players, game) ->
+    for id, player in players when id in game.$getIndex() and player.started
+      player
 

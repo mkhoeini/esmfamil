@@ -1,0 +1,15 @@
+h4 Do your review
+
+p Field to review: {{review.title}}
+p Remaining review time: {{review.time}}
+
+table
+  tr(ng-repeat="(id, field) in review.fields")
+    td
+      img(ng-src="{{players[id].picture}}")
+      | {{players[id].name}}
+    td {{field.input}}
+    td
+      input(type="check" ng-model="field.acceptable")
+      | Acceptable?
+

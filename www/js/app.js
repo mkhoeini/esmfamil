@@ -27,7 +27,7 @@ esmfamil.config(function($stateProvider, $urlRouterProvider) {
     }
     return _results;
   };
-  return loadStates('login', 'friends', 'friends.newgame', 'friends.invite', 'game', 'results');
+  return loadStates('login', 'friends', 'friends.newgame', 'friends.invite', 'game', 'review', 'results');
 });
 
 //# sourceMappingURL=app.js.map

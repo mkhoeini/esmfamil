@@ -1,6 +1,9 @@
 
 <p ng-hide="started">Wait for your friends to start the game</p>
 <div ng-show="started">
+  <div>Currently playing:
+    <div ng-repeat="player in players | currentlyPlaying:game"><img ng-src="{{player.picture}}"/>{{player.name}}</div>
+  </div>
   <p>Current letter: {{letter}}</p>
   <p>Remaining time: {{time}}</p>
   <table>
@@ -10,5 +13,6 @@
         <input ng-model="field.value"/>
       </td>
     </tr>
-  </table><a href="" ng-click="stop()">Done</a>
+  </table>
+  <button type="button" ng-show="allFilled" ng-click="done()">Done</button>
 </div>

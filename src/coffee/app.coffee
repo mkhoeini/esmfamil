@@ -23,4 +23,5 @@ esmfamil.config ($stateProvider, $urlRouterProvider) ->
              'friends.newgame',
              'friends.invite',
              'game',
+             'review',
              'results'

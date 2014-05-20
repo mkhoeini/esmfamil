@@ -1,6 +1,11 @@
 p(ng-hide="started") Wait for your friends to start the game
 
 div(ng-show="started")
+  div
+    | Currently playing:
+    div(ng-repeat="player in players | currentlyPlaying:game")
+      img(ng-src="{{player.picture}}")
+      | {{player.name}}
   p Current letter: {{letter}}
   p Remaining time: {{time}}
   table
@@ -8,4 +13,4 @@ div(ng-show="started")
       td {{name}}
       td
         input(ng-model="field.value")
-  a(href="" ng-click="stop()") Done
+  button(type="button" ng-show="allFilled" ng-click="done()") Done

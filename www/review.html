@@ -1,0 +1,13 @@
+
+<h4>Do your review</h4>
+<p>Field to review: {{review.title}}</p>
+<p>Remaining review time: {{review.time}}</p>
+<table>
+  <tr ng-repeat="(id, field) in review.fields">
+    <td><img ng-src="{{players[id].picture}}"/>{{players[id].name}}</td>
+    <td>{{field.input}}</td>
+    <td>
+      <input type="check" ng-model="field.acceptable"/>Acceptable?
+    </td>
+  </tr>
+</table>
