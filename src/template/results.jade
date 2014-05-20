@@ -1,0 +1,9 @@
+h2 Scores
+
+table
+  tr
+    td
+    td(ng-repeat='roundNum in rounds') {{roundNum}}
+  tr(ng-repeat='(playerId, playerData) in game')
+    td {{players[playerId].name}}
+    td(ng-repeat='roundNum in rounds') {{playerData.score[roundNum] || ''}}

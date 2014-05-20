@@ -13,12 +13,15 @@ esmfamil.classy.controller({
     }
   },
   watch: {
-    'review.title': function() {
+    'review.title': function(v) {
       var pid;
-      for (pid in review.fields) {
-        review.fields[pid].acceptable = true;
+      if (!((v != null) && (this.$.review.fields != null))) {
+        return;
       }
-      return delete review.fields[this.myself.id];
+      for (pid in this.$.review.fields) {
+        this.$.review.fields[pid].acceptable = true;
+      }
+      return delete this.$.review.fields[this.myself.id];
     }
   },
   _startReview: function() {
@@ -33,30 +36,34 @@ esmfamil.classy.controller({
     }).call(this));
   },
   _review: function() {
-    var field, fields, input, participant, requiredTime, review, _i, _len, _ref, _ref1;
+    var field, fields, input, participant, requiredTime, review, _i, _len, _ref, _ref1, _ref2;
     field = arguments[0], fields = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-    if (this.$.review.title != null) {
+    console.log(arguments);
+    if (((_ref = this.$.review) != null ? _ref.title : void 0) != null) {
       this._calcScores();
     }
     review = {};
     review.title = field;
     review.fields = {};
     review.time = 5;
-    _ref = this.$.game.$getIndex();
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      participant = _ref[_i];
+    _ref1 = this.$.game.$getIndex();
+    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+      participant = _ref1[_i];
       input = this.$.game[participant].fields[field].value;
-      review.fields[participant].input = input;
+      review.fields[participant] = {
+        input: input
+      };
       review.time += 1.5;
     }
     review.time = Math.floor(review.time);
+    this.$.review = review;
     this.setOnPlayers({
       review: review
     });
     this._tick();
-    requiredTime = review.time;
+    requiredTime = review.time * 1000;
     if (fields.length > 0) {
-      return this.$timeout((_ref1 = this._review).bind.apply(_ref1, [this].concat(__slice.call(fields))), requiredTime);
+      return this.$timeout((_ref2 = this._review).bind.apply(_ref2, [this].concat(__slice.call(fields))), requiredTime);
     } else {
       return this.$timeout(this._reviewFinished, requiredTime);
     }
@@ -78,7 +85,7 @@ esmfamil.classy.controller({
   _calcScores: function() {
     var field, person, pid, r, result, results, review, reviewd_person, score, unique, values, _i, _len, _ref, _ref1, _results;
     results = {};
-    _ref = this.$.game.getIndex();
+    _ref = this.$.game.$getIndex();
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       person = _ref[_i];
       review = this.$.game[person].review.fields;

@@ -13,16 +13,18 @@ esmfamil.classy.controller
     @_startReview() if @myself.admin
 
   watch:
-    'review.title': ->
-      for pid of review.fields
-        review.fields[pid].acceptable = true
-      delete review.fields[@myself.id]
+    'review.title': (v) ->
+      return unless v? and @$.review.fields?
+      for pid of @$.review.fields
+        @$.review.fields[pid].acceptable = true
+      delete @$.review.fields[@myself.id]
 
   _startReview: ->
     @_review (f for f of @$.data.fields)...
 
   _review: (field, fields...) ->
-    @_calcScores() if @$.review.title?
+    console.log arguments
+    @_calcScores() if @$.review?.title?
 
     review = {}
     review.title = field
@@ -31,16 +33,17 @@ esmfamil.classy.controller
 
     for participant in @$.game.$getIndex()
       input = @$.game[participant].fields[field].value
-      review.fields[participant].input = input
+      review.fields[participant] = input: input
       review.time += 1.5
 
     review.time = Math.floor review.time
 
+    @$.review = review
     @setOnPlayers review: review
 
     @_tick()
 
-    requiredTime = review.time
+    requiredTime = review.time * 1000
 
     if fields.length > 0
       @$timeout(@_review.bind(@, fields...), requiredTime)
@@ -59,7 +62,7 @@ esmfamil.classy.controller
 
   _calcScores: ->
     results = {}
-    for person in @$.game.getIndex()
+    for person in @$.game.$getIndex()
       review = @$.game[person].review.fields
       for reviewd_person, r of review
         results[reviewd_person] ?= 0

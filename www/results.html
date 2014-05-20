@@ -1,0 +1,12 @@
+
+<h2>Scores</h2>
+<table>
+  <tr>
+    <td></td>
+    <td ng-repeat="roundNum in rounds">{{roundNum}}</td>
+  </tr>
+  <tr ng-repeat="(playerId, playerData) in game">
+    <td>{{players[playerId].name}}</td>
+    <td ng-repeat="roundNum in rounds">{{playerData.score[roundNum] || ''}}</td>
+  </tr>
+</table>
