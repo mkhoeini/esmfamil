@@ -37,15 +37,19 @@ esmfamil.classy.controller({
     }
   },
   _startReview: function() {
-    var f;
-    return this._review.apply(this, (function() {
-      var _results;
-      _results = [];
-      for (f in this.$.data.fields) {
-        _results.push(f);
-      }
-      return _results;
-    }).call(this));
+    return this.$.game.$on('loaded', (function(_this) {
+      return function() {
+        var f;
+        return _this._review.apply(_this, (function() {
+          var _results;
+          _results = [];
+          for (f in this.$.data.fields) {
+            _results.push(f);
+          }
+          return _results;
+        }).call(_this));
+      };
+    })(this));
   },
   _review: function() {
     var field, fields, input, participant, review, _i, _len, _ref, _ref1;

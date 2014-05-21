@@ -25,7 +25,8 @@ esmfamil.classy.controller
       @$state.go 'results' if v
 
   _startReview: ->
-    @_review (f for f of @$.data.fields)...
+    @$.game.$on 'loaded', =>
+      @_review (f for f of @$.data.fields)...
 
   _review: (field, fields...) ->
     review = {}
