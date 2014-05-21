@@ -58,10 +58,11 @@ esmfamil.classy.controller({
     review.title = field;
     review.fields = {};
     review.time = 5;
+    console.log(this.$.game);
     _ref = this.$.game.$getIndex();
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       participant = _ref[_i];
-      input = this.$.game[participant].fields[field].value;
+      input = this.$.game.$child(participant).$child('fields').$child(field).value;
       review.fields[participant] = {
         input: input
       };

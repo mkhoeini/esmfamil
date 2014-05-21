@@ -34,8 +34,10 @@ esmfamil.classy.controller
     review.fields = {}
     review.time = 5
 
+    console.log @$.game
     for participant in @$.game.$getIndex()
-      input = @$.game[participant].fields[field].value
+      input = @$.game.$child(participant)
+        .$child('fields').$child(field).value
       review.fields[participant] = input: input
       review.time += 1.5
 
