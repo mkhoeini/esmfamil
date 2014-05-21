@@ -6,7 +6,7 @@ table
     td(ng-repeat='roundNum in rounds') {{roundNum}}
   tr(ng-repeat='(playerId, playerData) in game')
     td {{players[playerId].name}}
-    td(ng-repeat='roundNum in rounds') {{playerData.score[roundNum] || ''}}
+    td(ng-repeat='roundNum in rounds') {{playerData.score['r'+roundNum] || '-'}}
 
 div(ng-show='admin')
   button(type='button' ng-click='replay()') Do you want to play again?

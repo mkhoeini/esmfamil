@@ -5,14 +5,14 @@ persian_letters = ['ج', 'ث', 'ت', 'پ', 'ب', 'الف', 'ر', 'ذ', 'د', 'خ
 
 esmfamil.classy.controller({
   name: 'gameCtrl',
-  inject: ['$scope', '$timeout', 'myself', '$state', 'games', 'players', 'setOnPlayers'],
+  inject: ['$scope', '$timeout', 'myself', '$state', 'games', 'players', 'setOnUs', 'setOnPlayers'],
   init: function() {
     this.$.players = this.players;
     this.$.game = this.games.$child(this.myself.game);
     this.$.data = this.$.game.$child(this.myself.id);
     this.$.data.$child('time').$bind(this.$, 'time');
     this.$.data.$child('letter').$bind(this.$, 'letter');
-    this.$.data.$child('started').$bind(this.$, 'started');
+    this.$.started = this.$.data.$child('started');
     this.$.fields = {
       'نام': {
         value: ''
@@ -83,8 +83,13 @@ esmfamil.classy.controller({
   },
   stop: function() {
     this.myself.started = false;
-    this.$.started = false;
-    this.$.data.$child('fields').$set(this.$.fields);
+    this.setOnUs({
+      fields: this.$.fields,
+      started: false,
+      review: {
+        finished: false
+      }
+    });
     return this.$state.go('review');
   }
 });

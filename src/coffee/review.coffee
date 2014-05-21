@@ -1,7 +1,7 @@
 esmfamil.classy.controller
   name: 'reviewCtrl'
 
-  inject: ['$scope', '$timeout', '$state',
+  inject: ['$scope', '$timeout', '$state', 'setOnUs', 'setOnPerson',
            'myself', 'games', 'players', 'setOnPlayers']
 
   init: ->
@@ -12,16 +12,14 @@ esmfamil.classy.controller
 
     @_startReview() if @myself.admin
 
-  _accept: (pid, v = true) ->
-    @$.review.$child('fields').$child(pid).$child('acceptable')
-      .$set v
+  accept: (pid, v = true) ->
+    @setOnUs "review.fields.#{pid}.acceptable", v
 
   watch:
     'review.title': (v) ->
       return unless v? and @$.review.fields?
       for pid of @$.review.fields
-        @_accept pid
-      delete @$.review.fields[@myself.id]
+        @accept pid
 
     'review.finished': (v) ->
       @$state.go 'results' if v
@@ -30,8 +28,6 @@ esmfamil.classy.controller
     @_review (f for f of @$.data.fields)...
 
   _review: (field, fields...) ->
-    @_calcScores() if @$.review?.title?
-
     review = {}
     review.title = field
     review.fields = {}
@@ -44,26 +40,30 @@ esmfamil.classy.controller
 
     review.time = Math.floor review.time
 
-    @$.review.$set review
     @setOnPlayers review: review
 
-    @_tick()
-
-    requiredTime = review.time * 1000
-
     if fields.length > 0
-      @$timeout(@_review.bind(@, fields...), requiredTime)
+      @_tick @_nextReview.bind(@, fields...)
     else
-      @$timeout @_reviewFinished, requiredTime
+      @_tick @_reviewFinished.bind(@)
 
-  _tick: ->
-    return unless @$.review.time > 0
+  _nextReview: ->
+    @_calcScores()
+    @_review arguments...
+
+  _tick: (next) ->
+    if @$.review.time <= 0
+      next()
+      return
+
     @setOnPlayers
       review:
         time: @$.review.time - 1
-    @$timeout @_tick.bind(@), 1000
+
+    @$timeout @_tick.bind(@, next), 1000
 
   _reviewFinished: ->
+    @_calcScores()
     @setOnPlayers
       review:
         finished: true
@@ -71,11 +71,10 @@ esmfamil.classy.controller
   _calcScores: ->
     results = {}
     for person in @$.game.$getIndex()
-      review = @$.game[person].review.fields
-      for reviewd_person, r of review
+      review_fields = @$.game[person].review.fields
+      for reviewd_person, review of review_fields
         results[reviewd_person] ?= 0
-        if r.acceptable?
-          results[reviewd_person] += r.acceptable ? 1 : -1
+        results[reviewd_person] += if review.acceptable then 1 else -1
 
     values =
       for pid, result of results when result >= 0
@@ -87,8 +86,7 @@ esmfamil.classy.controller
     for pid, result of results when result >= 0
       person = @$.game.$child pid
       field = person.fields[@$.review.title].value
-      score = (person.score || {})[@myself.round] || 0
-      person.$child('score').$child(@myself.round).$set(
+      score = person.score?['r'+@myself.round] || 0
+      @setOnPerson pid, "score.r#{@myself.round}",
         score + 5 + 5*unique(field)
-      )
 

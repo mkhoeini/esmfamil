@@ -12,7 +12,7 @@ esmfamil.classy.controller
 
   inject: [
     '$scope', '$timeout', 'myself', '$state',
-    'games', 'players', 'setOnPlayers'
+    'games', 'players', 'setOnUs', 'setOnPlayers'
   ]
 
   init: ->
@@ -21,7 +21,7 @@ esmfamil.classy.controller
     @$.data = @$.game.$child @myself.id
     @$.data.$child('time').$bind @$, 'time'
     @$.data.$child('letter').$bind @$, 'letter'
-    @$.data.$child('started').$bind @$, 'started'
+    @$.started = @$.data.$child('started')
 
     @$.fields =
       'نام':
@@ -68,8 +68,11 @@ esmfamil.classy.controller
 
   stop: ->
     @myself.started = false
-    @$.started = false
-    @$.data.$child('fields').$set @$.fields
+    @setOnUs
+      fields: @$.fields
+      started: false
+      review:
+        finished: false
     @$state.go 'review'
 
 

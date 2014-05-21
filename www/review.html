@@ -7,7 +7,7 @@
     <td><img ng-src="{{players[id].picture}}"/>{{players[id].name}}</td>
     <td>{{field.input}}</td>
     <td>
-      <input type="check" ng-change="console.log(this)"/>Acceptable?
+      <input type="checkbox" ng-model="field.acceptable" ng-change="accept(id, field.acceptable)"/>Acceptable?
     </td>
   </tr>
 </table>

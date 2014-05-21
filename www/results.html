@@ -7,7 +7,7 @@
   </tr>
   <tr ng-repeat="(playerId, playerData) in game">
     <td>{{players[playerId].name}}</td>
-    <td ng-repeat="roundNum in rounds">{{playerData.score[roundNum] || ''}}</td>
+    <td ng-repeat="roundNum in rounds">{{playerData.score['r'+roundNum] || '-'}}</td>
   </tr>
 </table>
 <div ng-show="admin">

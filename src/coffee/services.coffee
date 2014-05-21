@@ -9,14 +9,26 @@ esmfamil.factory 'games', ($firebase) ->
   gamesRef = firebaseRef.child 'games'
   $firebase gamesRef
 
-esmfamil.factory 'setOnPlayers', (games, myself) ->
-  (options) ->
-    console.log options
-    games.$child(myself.game).$transaction (game) ->
-      for id of game
-        $.extend true, game[id], options
-      console.log game
-      game
+esmfamil.factory 'setOnPlayers', (games, myself, setOnPerson) ->
+  (key, value) ->
+    for id of games[myself.game]
+      setOnPerson id, key, value
+
+esmfamil.factory 'setOnPerson', (games, myself) ->
+  r_builder = (key, value) ->
+    result = {}
+    temp = result
+    keys = key.split('.')
+    for k, i in keys
+      temp[k] = if i < keys.length-1 then {} else value
+      temp = temp[k]
+    result
+  (pid, key, value) ->
+    games.$child(myself.game).$child(pid).$transaction (data) ->
+      $.extend true, data, if value? then r_builder(key, value) else key
+
+esmfamil.factory 'setOnUs', (setOnPerson, myself) ->
+  (key, value) -> setOnPerson myself.id, key, value
 
 esmfamil.factory 'myself', ->
   {}

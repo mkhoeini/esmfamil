@@ -10,6 +10,8 @@ table
       | {{players[id].name}}
     td {{field.input}}
     td
-      input(type="check" ng-change="console.log(this)")
+      input(type="checkbox"
+        ng-model="field.acceptable"
+        ng-change="accept(id, field.acceptable)")
       | Acceptable?
 

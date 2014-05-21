@@ -16,17 +16,41 @@ esmfamil.factory('games', function($firebase) {
   return $firebase(gamesRef);
 });
 
-esmfamil.factory('setOnPlayers', function(games, myself) {
-  return function(options) {
-    console.log(options);
-    return games.$child(myself.game).$transaction(function(game) {
-      var id;
-      for (id in game) {
-        $.extend(true, game[id], options);
-      }
-      console.log(game);
-      return game;
+esmfamil.factory('setOnPlayers', function(games, myself, setOnPerson) {
+  return function(key, value) {
+    var id, _results;
+    _results = [];
+    for (id in games[myself.game]) {
+      _results.push(setOnPerson(id, key, value));
+    }
+    return _results;
+  };
+});
+
+esmfamil.factory('setOnPerson', function(games, myself) {
+  var r_builder;
+  r_builder = function(key, value) {
+    var i, k, keys, result, temp, _i, _len;
+    result = {};
+    temp = result;
+    keys = key.split('.');
+    for (i = _i = 0, _len = keys.length; _i < _len; i = ++_i) {
+      k = keys[i];
+      temp[k] = i < keys.length - 1 ? {} : value;
+      temp = temp[k];
+    }
+    return result;
+  };
+  return function(pid, key, value) {
+    return games.$child(myself.game).$child(pid).$transaction(function(data) {
+      return $.extend(true, data, value != null ? r_builder(key, value) : key);
     });
+  };
+});
+
+esmfamil.factory('setOnUs', function(setOnPerson, myself) {
+  return function(key, value) {
+    return setOnPerson(myself.id, key, value);
   };
 });
 
